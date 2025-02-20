@@ -1,6 +1,6 @@
 package homework
 
-object Homework3 extends App {
+object HomeWork3 extends App {
   // Класс "Книга" с полями и переопределением метода toString
   class Book(val title: String, val author: String, val year: Int) {
     override def toString: String = s"Book(title='$title', author='$author', year=$year)"

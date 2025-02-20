@@ -112,8 +112,6 @@ object ScalaCaseClasses extends App {
   val x2_1                    = a.p.x
   println(a)
   println(z)
-  println(x2)
-  println(y2)
 }
 
 object ScalaObjects extends App {

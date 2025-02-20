@@ -2,7 +2,7 @@ package homework
 
 import scala.annotation.tailrec
 
-object Homework2 extends App {
+object HomeWork2 extends App {
 
   // Функция проверки четности числа
   def checkEvenOdd(n: Int): String = if (n % 2 == 0) "четное" else "нечетное"

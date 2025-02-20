@@ -1,0 +1,98 @@
+Option
+Option — контейнер, который может содержать значение (Some(x)) или быть пустым (None).
+
+ Основные методы Option
+- Option(1), Some(1), None — создание объектов Option.
+- isEmpty, isDefined, nonEmpty — проверка наличия значения.
+- contains(x) — проверяет, содержит ли Option значение x.
+- filter(predicate), filterNot(predicate) — фильтрация.
+- exists(predicate), forall(predicate) — проверка условий.
+- get, getOrElse(defaultValue), getOrElse(throw new Exception(...)) — извлечение значения.
+
+код:
+val o1 = Option(1) // Some(1)
+val o2 = Option.empty[Int] // None
+val o5 = Option(null) // None
+val i1 = o1.getOrElse(2) // 1, если Some(1), иначе 2
+
+orElse
+Позволяет вернуть первое непустое значение из цепочки Option.
+
+код:
+val x: String =
+  Option(loadById(1))
+    .orElse(Option(loadByContractNumber("321")))
+    .getOrElse("not found")
+
+
+Обработка Option с помощью match.
+
+код:
+val y = Option(1) match {
+  case None => "Пусто"
+  case Some(value) if value > 2 => "Больше 2"
+  case Some(v) => s"Значение: $v"
+}
+
+
+flatten
+Если у нас Option[Option[T]], flatten превращает его в Option[T].
+
+код:
+val o = Option(Option(1))
+val x = o.flatten // Some(1)
+
+
+ map
+Изменяет значение внутри Option.
+
+код:
+val o = Option(1)
+val o1 = o.map(_ + 1) // Some(2)
+
+flatMap
+Как map, но работает с Option[T], чтобы избежать Option[Option[T]].
+
+код:
+val o = Option(Option(1))
+val x = o.flatMap(o => o.map(_ + 1))
+
+
+foreach
+Выполняет действие для значения внутри Option, если оно есть.
+
+код:
+Option(1).foreach(println) // Выведет 1
+
+
+ Option.when
+Создает Some(value), если условие true, иначе None.
+
+код:
+val o = Option.when(1 == 2)("123") // None
+val o1 = Option.when(1 != 2)("123") // Some("123")
+
+
+Iterable-методы
+Методы Option, работающие с Iterable.
+
+код:
+val o1 = Option(1)
+val i1 = o1.head // 1
+val o2 = o1.headOption // Some(1)
+val i2 = o1.last // 1
+val o3 = o1.lastOption // Some(1)
+val o4 = o1.find(_ > 1) // None
+val i3 = o1.sum // 1
+val i4 = o1.product // 1
+
+
+fold
+Позволяет задать значение по умолчанию, если Option пуст.
+
+код:
+val o1 = Option(1)
+val o7: Int = o1.fold(1)(_ + 1) // Если None -> 1, если Some(1) -> 2
+
+
+
