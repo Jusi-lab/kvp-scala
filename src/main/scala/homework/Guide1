@@ -94,5 +94,81 @@ fold
 val o1 = Option(1)
 val o7: Int = o1.fold(1)(_ + 1) // Если None -> 1, если Some(1) -> 2
 
+withFilter
+Описание:
+Метод withFilter используется для фильтрации значений внутри контейнера
+(например, в for-comprehension). Он позволяет пропускать значения, которые не удовлетворяют условию.
 
+Пример:
 
+val name2: Option[String] = for {
+  ClassWithOption(_, Some(Urza(Some(name)))) <- cwo if name.nonEmpty
+} yield name
+if name.nonEmpty пропускает только те значения, где name не пустой.
+
+Аналог без for-comprehension:
+cwo.withFilter {
+  case ClassWithOption(_, Some(Urza(Some(name)))) => name.nonEmpty
+  case _ => false
+}.map {
+  case ClassWithOption(_, Some(Urza(Some(name)))) => name
+}
+
+isEmpty
+Описание:
+Метод isEmpty проверяет, является ли контейнер пустым (например, Option — None, List — пустой список).
+Пример:
+val isEmpty: Boolean = cwo.isEmpty
+Возвращает true, если cwo равно None, и false, если cwo содержит значение.
+
+Try
+Описание:
+Try — это контейнер для обработки операций, которые могут завершиться с исключением. Он возвращает либо Success с результатом, либо Failure с исключением.
+Пример:
+val maybeThrowException: Try[Int] = Try { 1 / 0 }
+Если операция завершится успешно, вернется Success(value).
+Если произойдет исключение, вернется Failure(exception).
+Методы Try:
+isSuccess — проверяет, успешен ли результат.
+isFailure — проверяет, завершился ли результат с исключением.
+getOrElse — возвращает значение или значение по умолчанию в случае исключения.
+recover — обрабатывает исключение и возвращает новый Try.
+
+7. Either
+Описание:
+Either — это контейнер, который может содержать одно из двух значений: Left (обычно используется для ошибок) или Right (обычно используется для успешного результата).
+Пример:
+def getInfoFromUrl(url: String): Either[String, Int] = {
+  if (url.isEmpty) Left("Empty url!")
+  else Right(url.length)
+}
+Если url пустой, возвращается Left("Empty url!").
+Иначе возвращается Right(url.length).
+Методы Either:
+map — применяет функцию к значению Right.
+flatMap — применяет функцию, возвращающую Either, к значению Right.
+left и right — позволяют работать с Left и Right отдельно.
+
+recover
+Описание:
+Метод recover позволяет обработать исключение в Try и вернуть новый результат.
+Пример:
+val recoverFail: Try[Double] = maybeThrowException.recover {
+  case _: ArithmeticException => 4d
+}
+Если исключение ArithmeticException, вернется Success(4d).
+
+toOption
+Описание:
+Метод toOption преобразует контейнер (Try, Either) в Option. Успешные значения становятся Some, а ошибки — None.
+Пример:
+val x: Option[Int] = maybeThrowException.toOption
+Если maybeThrowException равно Success(value), вернется Some(value).
+Если Failure, вернется None.
+
+mkString
+Описание:
+Метод mkString преобразует коллекцию в строку, объединяя элементы с помощью разделителя.
+Пример:
+val resultStr: String = resultInfos.mkString(",\n")
+Преобразует список resultInfos в строку, где элементы разделены ,\n.
