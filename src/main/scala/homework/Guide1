@@ -172,3 +172,104 @@ mkString
 Пример:
 val resultStr: String = resultInfos.mkString(",\n")
 Преобразует список resultInfos в строку, где элементы разделены ,\n.
+
+LEC 7
+
+1. Enumeration (простое перечисление)
+object Colors extends Enumeration {
+  type Color = Value
+  val Red, Green, Blue = Value
+
+  def isRed(c: Colors.Color): Boolean = c == Colors.Red
+}
+Enumeration — это базовый способ создания перечислений в Scala.
+type Color = Value — создает псевдоним для типа Value, который представляет собой элемент перечисления.
+val Red, Green, Blue = Value — создает три элемента перечисления: Red, Green, Blue.
+isRed — метод, который проверяет, является ли переданный элемент перечисления Red.
+Colors.values — возвращает все элементы перечисления.
+withName("Red") — возвращает элемент перечисления по его имени (выбрасывает исключение, если элемент не найден).
+
+2. Enumeration с переопределением параметров
+object Colors extends Enumeration {
+  type Color = Value
+  val Red = Value(10, "Red color")
+  val Green = Value(1)
+  val Blue = Value("Blue color")
+}
+Как работает
+Value может принимать параметры: id (числовой идентификатор) и name (строковое имя).
+Например, Red имеет id = 10 и имя "Red color".
+Это позволяет гибко настраивать перечисления, задавая собственные идентификаторы и имена.
+
+3. Enumeration с пользовательскими параметрами
+object ColorWP extends Enumeration {
+  protected case class RGBColor(i: Int, r: Int, g: Int, b: Int) extends super.Val(i) {
+    def printRGV(): Unit = println(s"${this.getClass.getSimpleName} rgb is $r $g $b")
+  }
+
+  type Color = RGBColor
+  val Red = RGBColor(1, 255, 0, 0)
+  val Green = RGBColor(2, 0, 255, 0)
+  val Blue = RGBColor(3, 0, 0, 255)
+}
+Как работает
+Создается пользовательский класс RGBColor, который расширяет Val и добавляет дополнительные параметры (например, RGB-значения).
+Каждый элемент перечисления (Red, Green, Blue) создается как экземпляр RGBColor.
+Метод printRGV позволяет выводить RGB-значения для каждого элемента.
+
+4. Sealed Trait Enum
+sealed trait ColorST {
+  val r: Int = 0
+  val g: Int = 0
+  val b: Int = 0
+  def printRGBValue(): Unit = println(s"${this.getClass.getSimpleName} rgb is $r $g $b")
+}
+
+case class Red() extends ColorST {
+  override val r: Int = 255
+}
+
+sealed trait — это трейт, который может быть расширен только в том же файле, что позволяет компилятору проверятьсопостав ления с образцом.
+Каждый класс (Red, Green, Blue) расширяет трейт и переопределяет значения r, g, b.
+Метод printRGBValue выводит RGB-значения для каждого цвета.
+matchColor — функция, которая использует сопоставление с образцом для вывода RGB-значений.
+
+5. Работа со списками (List)
+val l1: List[Int] = List(1, 2, 3, 4)
+Основные методы:
+isEmpty / nonEmpty: Проверяет, пуст ли список.
+head / headOption: Возвращает первый элемент списка (или Option).
+tail Возвращает список без первого элемента.
+init Возвращает список без последнего элемента.
+map Применяет функцию к каждому элементу списка.
+filter Фильтрует элементы списка по условию.
+fold / foldLeft / foldRight Сворачивает список, применяя функцию к аккумулятору и каждому элементу.
+groupBy Группирует элементы списка по ключу.
+mkString Преобразует список в строку с разделителем.
+sum / product Возвращает сумму или произведение элементов списка.
+maxBy / minBy Возвращает элемент с максимальным или минимальным значением по заданному критерию.
+
+6. Paterm match list
+
+l1 match {
+  case List(a, b, c, d) => println(a, b, c, d)
+  case head :: tail => println(head); println(tail)
+}
+Как работает
+Сопоставление с образцом позволяет разбить список на части (например, первый элемент и хвост).
+head :: tail — разделяет список на первый элемент (head) и оставшуюся часть (tail).
+List(a, b, c, d) — проверяет, что список содержит ровно 4 элемента.
+
+7. Операции над списками
+val intersect = l3.intersect(l4) // Пересечение списков
+val diff1 = l3.diff(l4)         // Разность списков
+val concat = l3.concat(l4)      // Конкатенация списков
+Как работает:
+
+intersect Возвращает общие элементы двух списков.
+diff Возвращает элементы, которые есть в первом списке, но отсутствуют во втором.
+concat Объединяет два списка в один.
+
+8. Преобразование списков
+l1.toSet  // Преобразует список в Set
+l1.toArray // Преобразует список в массив
