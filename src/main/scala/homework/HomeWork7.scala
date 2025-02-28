@@ -197,17 +197,17 @@ object  TaskHW7 {
   }
 }
 
-object  LastTask {
-  // Функция, возвращающая список всех возможных комбинаций элементов двух списков
+object LastTask {
+  // Функция, возвращающая список всех уникальных комбинаций элементов двух списков
   def combineLists(list1: List[Int], list2: List[Int]): List[(Int, Int)] = {
-    list1.flatMap(x => list2.map(y => (x, y))) // Для каждого элемента из list1 создаем пару с каждым элементом из list2
+    val combinations = list1.flatMap(x => list2.map(y => (x, y))) ++ list2.flatMap(x => list1.map(y => (x, y)))
+    combinations.distinct
   }
+
   def main(args: Array[String]): Unit = {
     val list1 = List(1, 2, 3)
-    val list2 = List(4, 5)
-    val combinations = combineLists(list1, list2) ++ combineLists(list2, list1)
-    println(s"Все комбинации: $combinations")
+    val list2 = List(2, 3)
+    val uniqueCombinations = combineLists(list1, list2)
+    println(s"Уникальные комбинации: $uniqueCombinations")
   }
 }
-
-//flatMap и map для каждого элемента x из первого списка (list1) создаются пары (x, y) с каждым элементом y из второго списка (list2), а затем все пары объединяются в один список.
