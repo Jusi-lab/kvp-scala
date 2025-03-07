@@ -46,3 +46,30 @@ object Task1 extends App{
   course.copyCourse("2026")
   println(course)
 }
+//Наследование
+class Employee {
+  def talk(msg: String): Unit = println(s"Employee says: $msg")
+}
+
+object Extend extends App{
+  class Manager extends Employee
+
+  val manager = new Manager
+
+  manager.talk("hello")
+
+  class Employee1(name: String) {
+    def talk(msg: String): Unit = println(s"Employee says: $msg")
+  }
+
+  class Manager1(name: String) extends Employee1(name) {
+    override def talk(msg: String): Unit = println(s"Manager [$name] says: $msg")
+  }
+
+
+  val employee = new Employee1("Sam")
+  val manager1 = new Manager1("Dan")
+
+  employee.talk("hello") // Employee says: hello
+  manager1.talk("congrats") // Manager [Dan] says: congrats
+}

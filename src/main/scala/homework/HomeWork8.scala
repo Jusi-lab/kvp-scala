@@ -179,3 +179,4 @@ object HomeWork8 extends App {
   val mapB = Map("a" -> 1, "b" -> 5, "c" -> 3)
   println(s"Ключи с равными значениями: ${filterEqualValues(mapA, mapB)}") // Вывод: Map(a -> 1, c -> 3)
 }
+
