@@ -422,3 +422,95 @@ justSum(2, 3) вернет 5.
 justSum2: (Int, Int) => Int
 Аналогично justSum, но явно использует функцию x => x.
 justSum2(2, 3) вернет 5.
+
+Implicit
+1.Implicit параметры (implicit val)
+Implicit параметры — это параметры методов, которые компилятор Scala автоматически подставляет из текущей области видимости, если они объявлены как `implicit`. Это позволяет избежать явной передачи параметров, упрощая код.
+implicit val defaultInt: Int = 42
+def printNumber(implicit num: Int): Unit = {
+  println(s"Number: $num")
+}
+Как работает
+- Компилятор ищет в текущей области видимости значение типа `Int`, помеченное как `implicit`.
+- Если такое значение найдено, оно автоматически подставляется в метод.
+- Если значение не найдено, возникает ошибка компиляции.
+
+ 2. Implicit преобразования (implicit def)
+Implicit преобразования позволяют автоматически преобразовывать один тип в другой. Это полезно, когда нужно расширить функциональность существующих типов или обеспечить совместимость между разными типами.
+case class A(i: Int)
+case class B(i: Int)
+implicit def aToB(a: A): B = B(a.i)
+val b: B = A(10) // Неявное преобразование A в B
+println(b) // Вывод B(10)
+Как работает
+- Компилятор ищет implicit функцию, которая может преобразовать тип `A` в тип `B`.
+- Если такая функция найдена, она автоматически применяется.
+- Преобразование происходит на этапе компиляции.
+
+3. Implicit классы (implicit class)
+Implicit классы позволяют добавлять методы к существующим типам без изменения их исходного кода. Это достигается за счет неявного преобразования исходного типа в новый класс с дополнительными методами.
+implicit class IntOps(i: Int) {
+  def isEven: Boolean = i % 2 == 0
+}
+val number = 4
+println(number.isEven) //true
+Как работает
+- Компилятор автоматически создает экземпляр implicit класса, когда вызывается метод, который не существует у исходного типа.
+- В данном случае, метод `isEven` добавляется к типу Int.
+
+4. Implicit преобразования для коллекций
+Implicit преобразования могут использоваться для работы с коллекциями, например, для преобразования Java-коллекций в Scala-коллекции или для добавления методов к стандартным коллекциям.
+import scala.collection.JavaConverters._
+val javaList: java.util.List[String] = new java.util.ArrayList[String]()
+javaList.add("Scala")
+javaList.add("Java")
+val scalaList: List[String] = javaList.asScala.toList
+println(scalaList) // Вывод: List(Scala, Java)
+- Метод `asScala` преобразует Java-коллекцию в Scala-коллекцию.
+- Это достигается за счет implicit преобразований, предоставляемых библиотекой JavaConverters.
+
+5. Implicit преобразования для Option
+
+Implicit преобразования могут быть полезны для работы с `Option`, например, для преобразования `null` в `Option` или для добавления методов к `Option`.
+val javaDouble: java.lang.Double = null
+val scalaDouble: Double = javaDouble // Неявное преобразование в Double
+println(scalaDouble) // Вывод: 0.0
+val optScalaDouble: Option[Double] = Option(javaDouble)
+println(optScalaDouble) // Вывод: Some(0.0)
+Как работает
+- Option.apply автоматически преобразует null в None, а не-null значения в Some.
+- Это позволяет безопасно работать с nullable-типами.
+
+6. Implicit преобразования для строк
+
+Implicit преобразования могут добавлять методы к строкам, например, для обработки `null` или выполнения операций над строками.
+implicit class StrOps(s: String) {
+  def orEmpty: String = Option(s).getOrElse("")
+}
+val str: String = null
+println(str.orEmpty) // Вывод: (пустая строка)
+Как работает
+- Если строка null, метод orEmpty возвращает пустую строку.
+- Это достигается за счет implicit преобразования строки в экземпляр класса StrOps.
+
+7. Implicit преобразования для числовых типов
+Implicit преобразования могут использоваться для выполнения операций над числовыми типами, например, для деления строки на число.
+implicit def stringToInt(s: String): Int = s.length
+val result: Int = "Hello" / 2
+println(result) // Вывод: 2 (длина строки "Hello" равна 5, 5 / 2 = 2)
+- Строка неявно преобразуется в её длину с помощью implicit функции `stringToInt`.
+- Затем выполняется деление длины строки на число.
+
+8. Implicit параметры для коллекций
+
+Implicit параметры могут использоваться для передачи коллекций в методы, например, для форматирования строк.
+
+implicit val strings: Seq[String] = Seq("Scala", "Java", "Kotlin")
+def splitAndJoin(s: String)(implicit seq: Seq[String]): String = {
+  s.split(" ").mkString(seq.mkString("(", ",", ")"))
+}
+val result: String = splitAndJoin("Hello World")
+println(result) // Вывод: Hello(Scala,Java,Kotlin)World
+Как работает
+- Implicit параметр seq автоматически подставляется в метод splitAndJoin.
+- Метод использует коллекцию для форматирования строки.
