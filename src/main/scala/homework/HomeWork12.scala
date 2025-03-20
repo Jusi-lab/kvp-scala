@@ -141,3 +141,27 @@ object ApplicativeSyntax {
       } yield f(i)
   }
 }
+
+object GenericFunctions extends App {
+
+  //  Функция, возвращающая первый элемент списка
+  def firstElement[T](list: List[T]): Option[T] = list.headOption
+
+  //  Функция, возвращающая список уникальных элементов
+  def uniqueElements[T](list: List[T]): List[T] = list.distinct
+
+  //  Функция, возвращающая количество элементов в списке
+  def countElements[T](list: List[T]): Int = list.length
+
+  //  Функция, применяющая преобразование к каждому элементу списка
+  def transformList[T, U](list: List[T], transform: T => U): List[U] = list.map(transform)
+
+  val intList = List(1, 2, 2, 3, 3, 3)
+  val stringList = List("a", "b", "c")
+  println(s"First element of intList: ${firstElement(intList)}")
+  println(s"First element of empty list: ${firstElement(List.empty[Int])}")
+  println(s"Unique elements of intList: ${uniqueElements(intList)}")
+  println(s"Count of elements in stringList: ${countElements(stringList)}")
+  val transformedList = transformList(intList, (x: Int) => x * 2)
+  println(s"Transformed list: $transformedList")
+}
